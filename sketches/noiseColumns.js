@@ -73,7 +73,6 @@ const sketch = ({ context }) => {
         value: new THREE.Vector2(1, 1),
       },
     },
-    wireframe: true,
     // Shader material Doc has a great explanation about what ver
     vertexShader: vertex,
     fragmentShader: fragment,
