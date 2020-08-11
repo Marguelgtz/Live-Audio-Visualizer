@@ -8,6 +8,6 @@ uniform vec4 vPosition;
 float PI = 3.14159265359;
 
 void main(){
-  gl_FragColor=vec4(vUv,0.,1.)
+  gl_FragColor=vec4(vUv,0.,1.);
 }
 
