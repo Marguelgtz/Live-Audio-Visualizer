@@ -83,7 +83,7 @@ const sketch = ({ context }) => {
   // - designed for containing groups of meshes
   // -adding objects to a group means you can treat them as a single object and rotate/scale/move them as one
   let group = new THREE.Group();
-
+  group.position.y = -0.5;
   scene.add(group);
 
   for (let i = 0; i < number; i++) {
@@ -108,7 +108,7 @@ const sketch = ({ context }) => {
     },
     // Update & render your scene here
     render({ time, playhead }) {
-      // console.log(time);
+      // need to figure out what playhead is !!!!!!!
       shaderMaterial.uniforms.playhead.value = playhead;
 
       controls.update();

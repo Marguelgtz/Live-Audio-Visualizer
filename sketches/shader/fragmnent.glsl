@@ -155,12 +155,14 @@ float cnoise(vec4 P){
 
 //step with anti-aliasing --> removes ragged blocky edges
 float aastep(float threshold, float value) {
-  #ifdef GL_OES_standard_derivatives
+  // it first check if the derivatives esxtensionis available
+  #ifdef GL_OES_standard_derivatives // it is available
   //dFdx, dFdy are beign used here so this explains the reason for GL_OES_standard_derivative extension
   //seems to be using the derivative of the edges to create a threshold and applyit to the smoothstep to remove the rough edge 
     float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
     return smoothstep(threshold-afwidth, threshold+afwidth, value);
   #else
+  // if the derivative extension is not available it procceeds with a normal step funciton
     return step(threshold, value);
   #endif  
 }
@@ -183,13 +185,14 @@ void main(){
   
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
-  float noise = cnoise(vec4(vUv * 8.,playhead * 15.,0.));
+  float noise = cnoise(vec4(vUv * 8.,playhead * 6.,0.));
 
   //add the border to the noise 
   noise = step(noise, 0.);
-  
+
   noise *= border;
 
+if(noise == 0.) discard;
 
   // gl_FragColor - reserved global assigned to the variable final pixel color is 
   // gl_FragColor = vec4(vUv,0.0,1.0); // this is creating a color for each pixel depending on the texture coordinates
