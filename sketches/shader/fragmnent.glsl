@@ -153,15 +153,47 @@ float cnoise(vec4 P){
   return 2.2 * n_xyzw;
 }
 
+//step with anti-aliasing --> removes ragged blocky edges
+float aastep(float threshold, float value) {
+  #ifdef GL_OES_standard_derivatives
+  //dFdx, dFdy are beign used here so this explains the reason for GL_OES_standard_derivative extension
+  //seems to be using the derivative of the edges to create a threshold and applyit to the smoothstep to remove the rough edge 
+    float afwidth = length(vec2(dFdx(value), dFdy(value))) * 0.70710678118654757;
+    return smoothstep(threshold-afwidth, threshold+afwidth, value);
+  #else
+    return step(threshold, value);
+  #endif  
+}
+
 void main(){
+
+  //adding some padding to the border 
+  float width = 0.1; // width of the border
+  // creating each edge with smoothstep
+  // -- Smoothstep => http://www.fundza.com/rman_shaders/smoothstep/
+  float border = smoothstep(0., width, vUv.x );
+  float border1 = smoothstep(0., width, vUv.y );
+  float border2 = smoothstep(0., width, 1. - vUv.x );
+  float border3 = smoothstep(0., width, 1. - vUv.y );
+
+  //add borders together
+  // *= C operator ==> C *= A is equivalent to C = C * A
+
+  border *= border1 * border2 * border3;
+  
   //creating 3d perlin noise with the texture coordinates
-  //because it is tridimensial it returns a vec3 
+  //because it is tridimensial it returns a vec3 ????
   float noise = cnoise(vec4(vUv * 8.,playhead * 15.,0.));
+
+  //add the border to the noise 
+  noise *= border;
+
+  noise = step(noise, 0.);
 
   // gl_FragColor - reserved global assigned to the variable final pixel color is 
   // gl_FragColor = vec4(vUv,0.0,1.0); // this is creating a color for each pixel depending on the texture coordinates
 
   gl_FragColor = vec4(vec3(noise),1.0);
-
+  // unsure of why theres need to be a vec3 above (doesnt the perlin noise return 3 values??)
 }
 
