@@ -88,6 +88,8 @@ const sketch = ({ context }) => {
   group.position.y = -0.5;
   scene.add(group);
 
+  let levelMaterials = [];
+
   for (let i = 0; i < number; i++) {
     //create levels that fit within the height of the cube
     let level = i / number;
@@ -95,6 +97,8 @@ const sketch = ({ context }) => {
     // here we are creating the top and bottom layer for each level
     let m0 = shaderMaterial.clone();
     let m1 = shaderMaterial.clone();
+    levelMaterials.push(m0);
+    levelMaterials.push(m1);
     m0.uniforms.black.value = 1;
     m1.uniforms.black.value = 0;
     m0.uniforms.level.value = level;
@@ -122,8 +126,15 @@ const sketch = ({ context }) => {
     },
     // Update & render your scene here
     render({ time, playhead }) {
-      // need to figure out what playhead is !!!!!!!
+      // playhead probably controls the timing of the rendering
+      // still unsure where the number comes from or what it represents
+
+      //setting the uniform playhead value to the playhead valueat each re render
       shaderMaterial.uniforms.playhead.value = playhead;
+
+      levelMaterials.forEach(
+        (material) => (material.uniforms.playhead.value = playhead)
+      );
 
       controls.update();
       renderer.render(scene, camera);

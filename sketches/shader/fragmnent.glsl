@@ -171,18 +171,19 @@ float aastep(float threshold, float value) {
 void main(){
 
   //adding some padding to the border 
-  float width = 0.1; // width of the border
+  float width = 0.05; // width of the border
   // creating each edge with smoothstep
   // -- Smoothstep => http://www.fundza.com/rman_shaders/smoothstep/
   float border = smoothstep(0., width, vUv.x );
-  float border1 = smoothstep(0., width, vUv.y );
+  // float border1 = smoothstep(0., width, vUv.y );
   float border2 = smoothstep(0., width, 1. - vUv.x );
-  float border3 = smoothstep(0., width, 1. - vUv.y );
+  // float border3 = smoothstep(0., width, 1. - vUv.y );
 
   //add borders together
   // *= C operator ==> C *= A is equivalent to C = C * A
 
-  border *= border1 * border2 * border3;
+  // border *= border1 * border2 * border3;
+  border *=  border2; 
   
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
@@ -190,7 +191,7 @@ void main(){
   float noise = cnoise(vec4(vUv * 10.,playhead * 8. + level * 2.,0.));
 
   //add the border to the noise 
-  noise = aastep(noise, 0.);
+  noise = aastep(0.2, noise);
   // noise = smoothstep(noise, width, .2);
 
   noise *= border;
@@ -204,7 +205,7 @@ if(noise == 0.) discard;
   // unsure of why theres need to be a vec3 above (doesnt the perlin noise return 3 values??)
 
 // here we are setting the 
-  if(black>.9){
+  if(black<.9){
     gl_FragColor.rgb = vec3(0.);
   }
 
