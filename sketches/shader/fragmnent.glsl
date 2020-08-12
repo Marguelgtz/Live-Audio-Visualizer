@@ -207,6 +207,13 @@ if(noise == 0.) discard;
 // here we are setting the 
   if(black<.9){
     gl_FragColor.rgb = vec3(0.);
+    if(level == 1.){
+      discard:
+    }
+  }
+
+  if(level == 1.) {
+    gl_FragColor.rgb = vec3(0.249, 0.2, 0.63);
   }
 
 }
