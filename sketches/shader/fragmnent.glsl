@@ -186,9 +186,10 @@ void main(){
   float noise = cnoise(vec4(vUv * 8.,playhead * 15.,0.));
 
   //add the border to the noise 
+  noise = step(noise, 0.);
+  
   noise *= border;
 
-  noise = step(noise, 0.);
 
   // gl_FragColor - reserved global assigned to the variable final pixel color is 
   // gl_FragColor = vec4(vUv,0.0,1.0); // this is creating a color for each pixel depending on the texture coordinates
