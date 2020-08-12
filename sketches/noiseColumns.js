@@ -89,6 +89,9 @@ const sketch = ({ context }) => {
   scene.add(group);
 
   for (let i = 0; i < number; i++) {
+    //create levels that fit within the height of the cube
+    let level = i / number;
+
     // here we are creating the top and bottom layer for each level
     let m0 = shaderMaterial.clone();
     let m1 = shaderMaterial.clone();
@@ -96,14 +99,16 @@ const sketch = ({ context }) => {
     m1.uniforms.black.value = 0;
     m0.uniforms.level.value = level;
     m1.uniforms.level.value = level;
-    //create levels that fit within the height of the cube
-    let level = i / number;
 
-    let mesh = new THREE.Mesh(geometry, shaderMaterial);
+    let mesh = new THREE.Mesh(geometry, m0);
+    let mesh1 = new THREE.Mesh(geometry, m1);
 
     // change y position to each layer to its level
     mesh.position.y = level;
+    mesh1.position.y = level - 0.005;
+
     group.add(mesh);
+    group.add(mesh1);
   }
 
   // draw each frame
