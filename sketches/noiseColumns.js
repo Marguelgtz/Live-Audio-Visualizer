@@ -70,10 +70,12 @@ const sketch = ({ context }) => {
       time: { type: "f", value: 0 },
       level: { type: "f", value: 0 },
       playhead: { type: "f", value: 0 },
-      uvRate1: {
-        value: new THREE.Vector2(1, 1),
-      },
+      black: { type: "f", value: 0 },
+      // uvRate1: {
+      //   value: new THREE.Vector2(1, 1),
+      // },
     },
+    transparent: true,
     // Shader material Doc has a great explanation about what ver
     vertexShader: vertex,
     fragmentShader: fragment,
@@ -87,6 +89,13 @@ const sketch = ({ context }) => {
   scene.add(group);
 
   for (let i = 0; i < number; i++) {
+    // here we are creating the top and bottom layer for each level
+    let m0 = shaderMaterial.clone();
+    let m1 = shaderMaterial.clone();
+    m0.uniforms.black.value = 1;
+    m1.uniforms.black.value = 0;
+    m0.uniforms.level.value = level;
+    m1.uniforms.level.value = level;
     //create levels that fit within the height of the cube
     let level = i / number;
 

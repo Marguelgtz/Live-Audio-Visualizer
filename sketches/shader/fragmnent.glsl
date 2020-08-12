@@ -185,10 +185,11 @@ void main(){
   
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
-  float noise = cnoise(vec4(vUv * 8.,playhead * 6.,0.));
+  float noise = cnoise(vec4(vUv * 10.,playhead * 8.,0.));
 
   //add the border to the noise 
-  noise = step(noise, 0.);
+  noise = aastep(noise, 0.);
+  // noise = smoothstep(noise, width, .2);
 
   noise *= border;
 
