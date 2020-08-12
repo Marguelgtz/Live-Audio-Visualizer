@@ -188,10 +188,10 @@ void main(){
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
   // we add the level to the playhead wich is what controls the timing  (speed) of the perlin  whichs lighlty changes the timing depending on which level it is acting on
-  float noise = cnoise(vec4(vUv * 10.,playhead * 8. + level * 2.,0.));
+  float noise = cnoise(vec4(vUv *8.,playhead * 8. + level * 4.,0.));
 
   //add the border to the noise 
-  noise = aastep(0.2, noise);
+  noise = aastep(0.25 + level/8., noise);
   // noise = smoothstep(noise, width, .2);
 
   noise *= border;
@@ -200,20 +200,20 @@ if(noise == 0.) discard;
 
   // gl_FragColor - reserved global assigned to the variable final pixel color is 
   // gl_FragColor = vec4(vUv,0.0,1.0); // this is creating a color for each pixel depending on the texture coordinates
-
-  gl_FragColor = vec4(vec3(noise),1.0);
+  
+  gl_FragColor = vec4(vec3(level),1.0);
   // unsure of why theres need to be a vec3 above (doesnt the perlin noise return 3 values??)
 
 // here we are setting the 
-  if(black<.9){
+  if(black>.5){
     gl_FragColor.rgb = vec3(0.);
-    if(level == 1.){
-      discard:
+    if(level ==1.) {
+      discard;
     }
   }
 
   if(level == 1.) {
-    gl_FragColor.rgb = vec3(0.249, 0.2, 0.63);
+    gl_FragColor.rgb = vec3(0.267, 0.970, 0.970);
   }
 
 }

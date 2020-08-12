@@ -90,7 +90,7 @@ const sketch = ({ context }) => {
 
   let levelMaterials = [];
 
-  for (let i = 0; i < number; i++) {
+  for (let i = 0; i <= number; i++) {
     //create levels that fit within the height of the cube
     let level = i / number;
 
@@ -132,9 +132,10 @@ const sketch = ({ context }) => {
       //setting the uniform playhead value to the playhead valueat each re render
       shaderMaterial.uniforms.playhead.value = playhead;
 
-      levelMaterials.forEach(
-        (material) => (material.uniforms.playhead.value = playhead)
-      );
+      levelMaterials.forEach((material) => {
+        material.uniforms.playhead.value = playhead;
+        // material.uniforms.leve.value = playhead
+      });
 
       controls.update();
       renderer.render(scene, camera);
