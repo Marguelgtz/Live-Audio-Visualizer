@@ -39,7 +39,7 @@ const sketch = ({ context }) => {
   const scene = new THREE.Scene();
 
   //Layers
-  let number = 10;
+  let number = 50;
 
   // create the geometry of the plane for each level
   //  A plane is the two-dimensional analog of a point (zero dimensions), a line (one dimension), and three-dimensional space
