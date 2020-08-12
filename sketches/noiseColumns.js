@@ -11,6 +11,7 @@ import vertex from "./shader/vertex.glsl";
 import fragment from "./shader/fragmnent.glsl";
 
 const settings = {
+  duration: 20, //seconds
   // Make the loop animated
   animate: true,
   // Get a WebGL canvas rather than 2D
@@ -106,7 +107,10 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render({ time }) {
+    render({ time, playhead }) {
+      // console.log(time);
+      shaderMaterial.uniforms.playhead.value = playhead;
+
       controls.update();
       renderer.render(scene, camera);
     },
