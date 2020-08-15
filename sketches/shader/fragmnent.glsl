@@ -188,7 +188,7 @@ void main(){
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
   // we add the level to the playhead wich is what controls the timing  (speed) of the perlin  whichs lighlty changes the timing depending on which level it is acting on
-  float noise = cnoise(vec4(vUv *8.,playhead * 25. + level * 3.,0.));
+  float noise = cnoise(vec4(vUv *8.,-playhead * 25. + level * 3.,0.));
 
   //add the border to the noise 
   noise = aastep(0.25 + level/2., noise);

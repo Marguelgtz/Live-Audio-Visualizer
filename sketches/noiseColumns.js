@@ -20,7 +20,6 @@ const settings = {
   attributes: {
     antialias: true,
   },
-  pixelated: true,
   fps: 40,
 };
 
