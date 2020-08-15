@@ -12,7 +12,7 @@ import fragmnent from "./shader/fragmnent.glsl";
 import portalFragmnent from "./shader/portalFragmnent.glsl";
 
 const settings = {
-  duration: 20, //seconds
+  duration: 40, //seconds
   // Make the loop animated
   animate: true,
   // Get a WebGL canvas rather than 2D
@@ -21,6 +21,7 @@ const settings = {
     antialias: true,
   },
   pixelated: true,
+  fps: 40,
 };
 
 const sketch = ({ context }) => {
@@ -165,10 +166,10 @@ const sketch = ({ context }) => {
         material.uniforms.playhead.value = playhead;
         // material.uniforms.leve.value = playhead
       });
-      group.rotation.y -= 0.02;
+      group.rotation.y -= 0.008;
       // portalMesh.rotation.y += 0.05;
       // portalMesh.rotation.x += 0.05;
-      portalMesh.rotation.z += 0.02;
+      portalMesh.rotation.z += 0.008;
 
       prevPos = portalMesh.position.y;
       // portalMesh.position.y = portalMesh.position.y + 0.01;
@@ -187,12 +188,12 @@ const sketch = ({ context }) => {
         // prevPos <= portalMesh.position.y
       ) {
         if (portalMesh.position.y > 0.5) direction = 0;
-        portalMesh.position.y = portalMesh.position.y + 0.01;
+        portalMesh.position.y = portalMesh.position.y + 0.005;
       }
 
       if (!direction && portalMesh.position.y >= -0.5) {
         if (portalMesh.position.y <= -0.5) direction = 1;
-        portalMesh.position.y = portalMesh.position.y - 0.01;
+        portalMesh.position.y = portalMesh.position.y - 0.005;
       }
       controls.update();
       renderer.render(scene, camera);
