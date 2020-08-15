@@ -5,10 +5,11 @@ global.THREE = require("three");
 require("three/examples/js/controls/OrbitControls");
 
 const canvasSketch = require("canvas-sketch");
-const { Scene } = require("three");
+const { Scene, ShaderMaterial, PositionalAudio } = require("three");
 
 import vertex from "./shader/vertex.glsl";
-import fragment from "./shader/fragmnent.glsl";
+import fragmnent from "./shader/fragmnent.glsl";
+import portalFragmnent from "./shader/portalFragmnent.glsl";
 
 const settings = {
   duration: 20, //seconds
@@ -16,6 +17,10 @@ const settings = {
   animate: true,
   // Get a WebGL canvas rather than 2D
   context: "webgl",
+  attributes: {
+    antialias: true,
+  },
+  pixelated: true,
 };
 
 const sketch = ({ context }) => {
@@ -25,7 +30,7 @@ const sketch = ({ context }) => {
   });
 
   // WebGL background color
-  renderer.setClearColor("#000", 1);
+  renderer.setClearColor("f00", 1);
 
   // Setup a camera
   const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 100);
@@ -49,9 +54,17 @@ const sketch = ({ context }) => {
   // - using the unit circle (https://i.pinimg.com/originals/1d/89/0d/1d890d831b0f9b8e24124a7bc6a61afb.gif) we can see that by rotating our x axis to pi/2 we would be rotating our object by 90 deegres to the "left" from our starting position (0). If we wanted to rotate 90 degrees to the right if we follow the unit circle we would use the value 3pi/ 2
   // - we can do basic rotation on al axises by doing using this approach
 
+  //PORTAL
+  const portalGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5);
+  const portalShader = new ShaderMaterial({
+    side: THREE.DoubleSide,
+    transparent: true,
+    vertexShader: vertex,
+    fragmentShader: portalFragmnent,
+  });
+
   //-- Setup a material
   //-- MeshBasicMaterial - This colors the faces of the mesh differently based on the face's normal or what direction they are facing.
-  let material = new THREE.MeshBasicMaterial({ wireframe: true });
 
   //-- Material Docs => https://threejs.org/docs/#api/en/materials/Material
   //-- Shader MaterIAL Docs => https://threejs.org/docs/#api/en/materials/ShaderMaterial
@@ -78,14 +91,22 @@ const sketch = ({ context }) => {
     transparent: true,
     // Shader material Doc has a great explanation about what ver
     vertexShader: vertex,
-    fragmentShader: fragment,
+    fragmentShader: fragmnent,
   });
+
+  const portalMesh = new THREE.Mesh(portalGeometry, portalShader);
+  portalMesh.rotateX(Math.PI / 2);
 
   //GROUPS
   // - designed for containing groups of meshes
   // -adding objects to a group means you can treat them as a single object and rotate/scale/move them as one
   let group = new THREE.Group();
+  // const axis = new THREE.Vector3(1, 0, 0);
+
   group.position.y = -0.5;
+
+  portalMesh.position.y = -0.5;
+  scene.add(portalMesh);
   scene.add(group);
 
   let levelMaterials = [];
@@ -110,11 +131,19 @@ const sketch = ({ context }) => {
     // change y position to each layer to its level
     mesh.position.y = level;
     mesh1.position.y = level - 0.005;
+    // mesh.rotation.x -= 0.5;
+    // mesh1.rotation.y -= 0.5;
 
     group.add(mesh);
     group.add(mesh1);
   }
 
+  const portalMove = (yPosition) => {
+    const current = yPosition;
+  };
+  let prevPos = -0.5;
+  //1 => up, 0 => down
+  let direction = 1;
   // draw each frame
   return {
     // Handle resize events here
@@ -125,10 +154,10 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render({ time, playhead }) {
+    render({ time, playhead, fps }) {
       // playhead probably controls the timing of the rendering
       // still unsure where the number comes from or what it represents
-
+      // console.log(fps);
       //setting the uniform playhead value to the playhead valueat each re render
       shaderMaterial.uniforms.playhead.value = playhead;
 
@@ -136,7 +165,35 @@ const sketch = ({ context }) => {
         material.uniforms.playhead.value = playhead;
         // material.uniforms.leve.value = playhead
       });
+      group.rotation.y -= 0.02;
+      // portalMesh.rotation.y += 0.05;
+      // portalMesh.rotation.x += 0.05;
+      portalMesh.rotation.z += 0.02;
 
+      prevPos = portalMesh.position.y;
+      // portalMesh.position.y = portalMesh.position.y + 0.01;
+
+      //function tap moves portal from top to bottom
+      // if (
+      //   (portalMesh.position.y >= 0.05 && prevPos <= portalMesh.position.y) ||
+      //   direction
+      // ) {
+      //   portalMesh.position.y = portalMesh.position.y + 0.01;
+      // }
+      // console.log(direction);
+      if (
+        direction &&
+        portalMesh.position.y <= 0.51
+        // prevPos <= portalMesh.position.y
+      ) {
+        if (portalMesh.position.y > 0.5) direction = 0;
+        portalMesh.position.y = portalMesh.position.y + 0.01;
+      }
+
+      if (!direction && portalMesh.position.y >= -0.5) {
+        if (portalMesh.position.y <= -0.5) direction = 1;
+        portalMesh.position.y = portalMesh.position.y - 0.01;
+      }
       controls.update();
       renderer.render(scene, camera);
     },

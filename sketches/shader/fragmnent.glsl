@@ -175,23 +175,23 @@ void main(){
   // creating each edge with smoothstep
   // -- Smoothstep => http://www.fundza.com/rman_shaders/smoothstep/
   float border = smoothstep(0., width, vUv.x );
-  // float border1 = smoothstep(0., width, vUv.y );
+  float border1 = smoothstep(0., width, vUv.y );
   float border2 = smoothstep(0., width, 1. - vUv.x );
-  // float border3 = smoothstep(0., width, 1. - vUv.y );
+  float border3 = smoothstep(0., width, 1. - vUv.y );
 
   //add borders together
   // *= C operator ==> C *= A is equivalent to C = C * A
 
-  // border *= border1 * border2 * border3;
-  border *=  border2; 
+  border *= border1 * border2 * border3;
+  // border *=  border2; 
   
   //creating 3d perlin noise with the texture coordinates
   //because it is tridimensial it returns a vec3 ????
   // we add the level to the playhead wich is what controls the timing  (speed) of the perlin  whichs lighlty changes the timing depending on which level it is acting on
-  float noise = cnoise(vec4(vUv *8.,playhead * 8. + level * 4.,0.));
+  float noise = cnoise(vec4(vUv *8.,-playhead * 10. + level * 3.,0.));
 
   //add the border to the noise 
-  noise = aastep(0.25 + level/8., noise);
+  noise = aastep(0.25 + level/2., noise);
   // noise = smoothstep(noise, width, .2);
 
   noise *= border;
@@ -201,19 +201,27 @@ if(noise == 0.) discard;
   // gl_FragColor - reserved global assigned to the variable final pixel color is 
   // gl_FragColor = vec4(vUv,0.0,1.0); // this is creating a color for each pixel depending on the texture coordinates
   
-  gl_FragColor = vec4(vec3(level),1.0);
+  gl_FragColor = vec4(vec3(level),1.);
   // unsure of why theres need to be a vec3 above (doesnt the perlin noise return 3 values??)
 
 // here we are setting the 
   if(black>.5){
+    // gl_FragColor.rgb = vec3(0.);
     gl_FragColor.rgb = vec3(0.);
     if(level ==1.) {
       discard;
     }
+  } else  {
+    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
   }
 
-  if(level == 1.) {
-    gl_FragColor.rgb = vec3(0.267, 0.970, 0.970);
+  if(level == 0. ) {
+    // rgb(67,247,247)
+    gl_FragColor.rgb = vec3(1.);
+  }
+  if(level == 1. ) {
+    // rgb(67,247,247)
+    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
   }
 
 }
