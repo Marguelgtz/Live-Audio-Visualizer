@@ -20,7 +20,6 @@ const settings = {
   attributes: {
     antialias: true,
   },
-  fps: 40,
 };
 
 const sketch = ({ context }) => {
@@ -43,6 +42,45 @@ const sketch = ({ context }) => {
   // Setup your scene
   const scene = new THREE.Scene();
 
+  //Audio
+  var listener = new THREE.AudioListener();
+  var audio = new THREE.Audio(listener);
+  camera.add(listener);
+
+  //create audio context object
+  // let audioContext = listener.context();
+  // let stream = audioContext.create
+  let stream = null;
+  let analyser = null;
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: true,
+    })
+    .then((mediaobj) => {
+      console.log("media obj", mediaobj);
+      stream = mediaobj;
+      gotStream();
+    })
+    .catch((err) => console.log(err));
+
+  // getMedia();
+  const gotStream = () => {
+    //set stream as media source ==> goes top speaker
+    audio.setMediaStreamSource(stream);
+    analyze();
+  };
+
+  const analyze = () => {
+    // let audioContext = new AudioContext();
+    // let analyser = audioContext.createAnalyser();
+    // analyser.fftSize = 2048;
+    // let mediaStreamSource = audioContext.createMediaStreamSource(stream);
+    // mediaStreamSource.connect(analyser);
+    // analyser.connect(audioContext.destination);
+    // console.log(analyser);
+    analyser = new THREE.AudioAnalyser(audio, 32);
+  };
+  // console.log(analyser);
   //Layers
   let number = 50;
 
@@ -84,6 +122,7 @@ const sketch = ({ context }) => {
       level: { type: "f", value: 0 },
       playhead: { type: "f", value: 0 },
       black: { type: "f", value: 0 },
+      audioData: { type: "f", value: 0 },
       // uvRate1: {
       //   value: new THREE.Vector2(1, 1),
       // },
@@ -145,6 +184,11 @@ const sketch = ({ context }) => {
   //1 => up, 0 => down
   let direction = 1;
   // draw each frame
+  let audioData = null;
+  let audioDataAverage = 1.5;
+  if (analyser) {
+    // console.log(audioDataAverage);
+  }
   return {
     // Handle resize events here
     resize({ pixelRatio, viewportWidth, viewportHeight }) {
@@ -154,16 +198,28 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render({ time, playhead, fps }) {
+    async render({ time, playhead, fps }) {
+      if (analyser) {
+        audioData = analyser.getFrequencyData();
+        audioDataAverage = audioData.reduce(
+          (a, b) => (a + b) / audioData.length
+        );
+      }
       // playhead probably controls the timing of the rendering
       // still unsure where the number comes from or what it represents
       // console.log(fps);
       //setting the uniform playhead value to the playhead valueat each re render
       shaderMaterial.uniforms.playhead.value = playhead;
 
-      levelMaterials.forEach((material) => {
+      await levelMaterials.forEach((material) => {
         material.uniforms.playhead.value = playhead;
-        // material.uniforms.leve.value = playhead
+        // console.log(audioDataAverage);
+        // if (audioDataAverage > 15) {
+        //   material.uniforms.audioData.value = 15;
+        // } else {
+        material.uniforms.audioData.value = audioDataAverage + 1;
+        // }
+        // console.log(audioDataAverage);
       });
       group.rotation.y -= 0.008;
       // portalMesh.rotation.y += 0.05;
