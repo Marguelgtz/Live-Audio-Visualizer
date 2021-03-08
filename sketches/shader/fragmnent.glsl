@@ -208,21 +208,27 @@ if(noise == 0.) discard;
 // here we are setting the 
   if(black>.5){
     // gl_FragColor.rgb = vec3(0.);
-    gl_FragColor.rgb = vec3(0.);
+    //black color
+    // gl_FragColor.rgb = vec3(0.);
+     gl_FragColor.rgb = vec3(0.058, 1., 1.);
     if(level ==1.) {
       discard;
     }
   } else  {
-    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+    // gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+   
+      gl_FragColor.rgb = vec3(1., 0., 1.);
   }
 
   if(level == 0. ) {
     // rgb(67,247,247)
-    gl_FragColor.rgb = vec3(1.);
+    // gl_FragColor.rgb = vec3(1.);
+     gl_FragColor.rgb = vec3(0.058, 1., 1.);
   }
   if(level == 1. ) {
     // rgb(67,247,247)
-    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+    // gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+      gl_FragColor.rgb = vec3(0.058, 1., 1.);
   }
 
 }

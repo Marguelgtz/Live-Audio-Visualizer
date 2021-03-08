@@ -201,9 +201,11 @@ const sketch = ({ context }) => {
     async render({ time, playhead, fps }) {
       if (analyser) {
         audioData = analyser.getFrequencyData();
+        // console.log(audioData);
         audioDataAverage = audioData.reduce(
           (a, b) => (a + b) / audioData.length
         );
+        console.log(audioDataAverage);
       }
       // playhead probably controls the timing of the rendering
       // still unsure where the number comes from or what it represents
