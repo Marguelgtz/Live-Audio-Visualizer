@@ -12,7 +12,7 @@ import fragmnent from "./shader/fragmnent.glsl";
 import portalFragmnent from "./shader/portalFragmnent.glsl";
 
 const settings = {
-  duration: 40, //seconds
+  // duration: 40,seconds
   // Make the loop animated
   animate: true,
   loop: true,
@@ -201,6 +201,9 @@ const sketch = ({ context }) => {
     // Update & render your scene here
     // --NEED TO CONTROL FRAMERATE FOR BETTER PERFORMANCE ---
     async render({ time, playhead, fps }) {
+      console.log('RENDER TIME :' , time)
+      console.log('Fps :' , fps)
+
       // console.log("check");
       if (analyser) {
         audioData = analyser.getFrequencyData();
@@ -261,6 +264,13 @@ const sketch = ({ context }) => {
         // group.rotation.z = group.rotation.z - 0.025;
       }
       controls.update();
+
+      console.log(requestAnimationFrame())
+      // function animate()  {
+      //   setTimeout(() => {
+      //     requestAnimationFrame()
+      //   }, 1000 / fps);
+      // }
       renderer.render(scene, camera);
     },
     // Dispose of events & renderer for cleaner hot-reloading
