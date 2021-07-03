@@ -15,6 +15,7 @@ const settings = {
   duration: 40, //seconds
   // Make the loop animated
   animate: true,
+  loop: true,
   // Get a WebGL canvas rather than 2D
   context: "webgl",
   attributes: {
@@ -56,9 +57,9 @@ const sketch = ({ context }) => {
     .getUserMedia({
       audio: true,
     })
-    .then((mediaobj) => {
+    .then(async (mediaobj) => {
       console.log("media obj", mediaobj);
-      stream = mediaobj;
+      stream = await mediaobj;
       gotStream();
     })
     .catch((err) => console.log(err));
@@ -198,7 +199,9 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
+    // --NEED TO CONTROL FRAMERATE FOR BETTER PERFORMANCE ---
     async render({ time, playhead, fps }) {
+      // console.log("check");
       if (analyser) {
         audioData = analyser.getFrequencyData();
         // console.log(audioData);
@@ -219,14 +222,17 @@ const sketch = ({ context }) => {
         // if (audioDataAverage > 15) {
         //   material.uniforms.audioData.value = 15;
         // } else {
-        material.uniforms.audioData.value = audioDataAverage + 1;
+        material.uniforms.audioData.value = audioDataAverage * 8 + 1.5;
         // }
         // console.log(audioDataAverage);
       });
-      group.rotation.y -= 0.008;
+      group.rotation.y -= 0.025;
+      // group.rotation.x -= 0.055;
+      // group.rotation.z -= 0.015;
       // portalMesh.rotation.y += 0.05;
       // portalMesh.rotation.x += 0.05;
-      portalMesh.rotation.z += 0.008;
+      portalMesh.rotation.z += 0.025;
+      portalMesh.rotation.x -= 0.025;
 
       prevPos = portalMesh.position.y;
       // portalMesh.position.y = portalMesh.position.y + 0.01;
@@ -246,11 +252,13 @@ const sketch = ({ context }) => {
       ) {
         if (portalMesh.position.y > 0.5) direction = 0;
         portalMesh.position.y = portalMesh.position.y + 0.005;
+        // group.rotation.z = group.rotation.z + 0.055;
       }
 
       if (!direction && portalMesh.position.y >= -0.5) {
         if (portalMesh.position.y <= -0.5) direction = 1;
         portalMesh.position.y = portalMesh.position.y - 0.005;
+        // group.rotation.z = group.rotation.z - 0.025;
       }
       controls.update();
       renderer.render(scene, camera);

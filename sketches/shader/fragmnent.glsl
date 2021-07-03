@@ -192,7 +192,7 @@ void main(){
   float noise = cnoise(vec4(vUv *10.,-playhead * 20. + level * audioData,0.));
 
   //add the border to the noise 
-  noise = aastep(0.25 + level/2., noise);
+  noise = aastep(0.3 + level/2., noise);
   // noise = smoothstep(noise, width, .2);
 
   noise *= border;
@@ -209,26 +209,26 @@ if(noise == 0.) discard;
   if(black>.5){
     // gl_FragColor.rgb = vec3(0.);
     //black color
-    // gl_FragColor.rgb = vec3(0.);
-     gl_FragColor.rgb = vec3(0.058, 1., 1.);
+    gl_FragColor.rgb = vec3(0.);
+    //  gl_FragColor.rgb = vec3(0.058, 1., 1.);
     if(level ==1.) {
       discard;
     }
   } else  {
-    // gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
    
-      gl_FragColor.rgb = vec3(1., 0., 1.);
+      // gl_FragColor.rgb = vec3(1., 0., 1.);
   }
 
   if(level == 0. ) {
     // rgb(67,247,247)
-    // gl_FragColor.rgb = vec3(1.);
-     gl_FragColor.rgb = vec3(0.058, 1., 1.);
+    gl_FragColor.rgb = vec3(1.);
+    //  gl_FragColor.rgb = vec3(0.058, 1., 1.);
   }
   if(level == 1. ) {
     // rgb(67,247,247)
-    // gl_FragColor.rgb = vec3(0.976, 0., 0.247);
-      gl_FragColor.rgb = vec3(0.058, 1., 1.);
+    gl_FragColor.rgb = vec3(0.976, 0., 0.247);
+      // gl_FragColor.rgb = vec3(0.058, 1., 1.);
   }
 
 }
