@@ -1,16 +1,18 @@
 {
-  "name": "noise_columns",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "live-audio-visualizer",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Live microphone-reactive Three.js visualizer",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "python3 -m http.server 4173",
+    "dev": "python3 -m http.server 4173"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "canvas-sketch": "^0.7.3",
-    "three": "^0.119.1"
-  }
+  "keywords": [
+    "threejs",
+    "web-audio",
+    "visualizer",
+    "shader"
+  ],
+  "license": "MIT"
 }
